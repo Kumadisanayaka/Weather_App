@@ -4,42 +4,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Weather App</title>
+
     <link rel="stylesheet" href="/style.css">
 </head>
 
 <body>
+
     <div class="weather-container">
-        <h1>Weather App</h1>
+
+        <!-- ==================== HEADER ==================== -->
+
+        <header class="app-header">
+
+            <h1>Weather App</h1>
+
+            <p>Check the current weather of any city</p>
+
+        </header>
+
+
+        <!-- ==================== SEARCH ==================== -->
 
         <div class="search-box">
-            <input type="text" id="cityInput" placeholder="Enter city name">
+
+            <input type="text" id="cityInput" placeholder="Enter city name" autocomplete="off">
 
             <button id="searchbtn">Search</button>
+
         </div>
+
+
+        <!-- ==================== MESSAGES ==================== -->
+
+        <p id="loadingMessage">Loading...</p>
+
+        <p id="errorMessage">City not found. Please try again.</p>
+
+
+        <!-- ==================== CURRENT WEATHER ==================== -->
 
         <div class="weather-card">
 
-            <h2 id="cityName">Colombo</h2>
+            <!-- Location -->
 
-            <p id="temperature">--°C</p>
+            <div class="location">
 
-            <p id="description">Weather condition</p>
+                <h2 id="cityName">Colombo</h2>
+                <p id="countryName">Sri Lanka</p>
+                <p id="dateTime">--</p>
+
+            </div>
+
+
+            <!-- Main Weather -->
+
+            <div class="main-weather">
+
+                <img id="weatherIcon" src="" alt="Weather icon">
+
+                <div class="temperature-section">
+
+                    <p id="temperature">--°C</p>
+                    <p id="description">Weather condition</p>
+                    <p>Feels like<strong id="feelsLike">--°C</strong></p>
+
+                </div>
+
+            </div>
+
+
+            <!-- ==================== WEATHER DETAILS ==================== -->
+
             <div class="weather-details">
-                <div>
-                    <span>Humidity</span>
+
+                <div class="weather-item">
+
+                    <span>💧 Humidity</span>
                     <strong id="humidity">--%</strong>
+
                 </div>
 
-                <div>
-                    <span>Wind</span>
-                    <strong id="wind">-- Km/h</strong>
+
+                <div class="weather-item">
+
+                    <span>💨 Wind</span>
+                    <strong id="wind">-- km/h</strong>
+
                 </div>
+
+
+                <div class="weather-item">
+
+                    <span>🌡 Pressure</span>
+                    <strong id="pressure">-- hPa</strong>
+
+                </div>
+
+
+                <div class="weather-item">
+
+                    <span>👁 Visibility</span>
+                    <strong id="visibility">-- km</strong>
+
+                </div>
+
+
+                <div class="weather-item">
+
+                    <span>☁️ Cloudiness</span>
+                    <strong id="cloudiness">--%</strong>
+
+                </div>
+
+
+                <div class="weather-item">
+
+                    <span>🧭 Wind Direction</span>
+                    <strong id="windDirection">--°</strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- ==================== SUN INFORMATION ==================== -->
+
+            <div class="sun-info">
+
+                <div class="sun-item">
+
+                    <span>🌅 Sunrise</span>
+                    <strong id="sunrise">--:--</strong>
+
+                </div>
+
+
+                <div class="sun-item">
+
+                    <span>🌇 Sunset</span>
+                    <strong id="sunset">--:--</strong>
+
+                </div>
+
             </div>
 
         </div>
+
+
+        <!-- ==================== 5 DAY FORECAST ==================== -->
+
+        <section class="forecast-section">
+
+            <h2>5-Day Forecast</h2>
+
+            <div id="forecastContainer" class="forecast-container">
+
+                <!-- JavaScript will create forecast cards here -->
+
+            </div>
+
+        </section>
+
     </div>
+
+
     <script src="app.js"></script>
+
 </body>
 
 </html>

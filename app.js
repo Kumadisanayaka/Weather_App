@@ -9,10 +9,10 @@ const weatherIcon = document.getElementById("weatherIcon");
 const feelsLike = document.getElementById("feelsLike");
 const pressure = document.getElementById("pressure");
 const visibility = document.getElementById("visibility");
+const sunrise = document.getElementById("sunrise");
+const sunset = document.getElementById("sunset");
 
 let errorMessage = document.getElementById("errorMessage");
-
-
 
 searchbtn.addEventListener("click", function () {
     let city = cityInput.value.trim();
@@ -29,8 +29,6 @@ searchbtn.addEventListener("click", function () {
 })
 
 let apiKey = "b4d3457f753e1147ff953187948d96dd";
-
-
 
 async function getWeather(city) {
     let url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
@@ -58,6 +56,32 @@ async function getWeather(city) {
         feelsLike.textContent = `${data.main.feels_like}°C`;
         pressure.textContent = `${data.main.pressure} hPa`;
         visibility.textContent = `${data.visibility / 1000}Km`;
+        
+        let sunrisetime = new Date(data.sys.sunrise * 1000);
+        let sunrisehours = sunrisetime.getHours();
+        let sunriseminutes = sunrisetime.getMinutes();
+
+        sunriseminutes = String(sunriseminutes).padStart(2,"0");
+        sunrisehours = sunrisehours % 12 || 12;
+
+        let sunriseperiod = sunrisehours >= 12 ? "PM" : "AM";
+
+ 
+
+        let sunsettime = new Date(data.sys.sunset * 1000);
+        let sunsetHours = sunsettime.getHours();
+        let sunsetMinutes = sunsettime.getMinutes();
+
+        sunsetMinutes = String(sunsetMinutes).padStart(2, "0");
+
+        let sunsetPeriod = sunsetHours >= 12 ? "PM" : "AM";
+
+        sunsetHours = sunsetHours % 12 || 12;
+
+  
+        sunrise.textContent = `${sunrisehours}:${sunriseminutes} ${sunriseperiod}`;
+        sunset.textContent = `${sunsetHours}:${sunsetMinutes} ${sunsetPeriod}`;
+       
 
     } catch (error) {
         console.log(error.message);

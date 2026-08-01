@@ -35,7 +35,7 @@ async function getWeather(city) {
     try {
         let response = await fetch(url)
 
-        if(!response.ok){
+        if (!response.ok) {
             throw new Error("something went wrong");
 
         }
@@ -56,17 +56,17 @@ async function getWeather(city) {
         feelsLike.textContent = `${data.main.feels_like}°C`;
         pressure.textContent = `${data.main.pressure} hPa`;
         visibility.textContent = `${data.visibility / 1000}Km`;
-        
+
         let sunrisetime = new Date(data.sys.sunrise * 1000);
         let sunrisehours = sunrisetime.getHours();
         let sunriseminutes = sunrisetime.getMinutes();
 
-        sunriseminutes = String(sunriseminutes).padStart(2,"0");
+        sunriseminutes = String(sunriseminutes).padStart(2, "0");
         sunrisehours = sunrisehours % 12 || 12;
 
         let sunriseperiod = sunrisehours >= 12 ? "PM" : "AM";
 
- 
+
 
         let sunsettime = new Date(data.sys.sunset * 1000);
         let sunsetHours = sunsettime.getHours();
@@ -78,10 +78,10 @@ async function getWeather(city) {
 
         sunsetHours = sunsetHours % 12 || 12;
 
-  
+
         sunrise.textContent = `${sunrisehours}:${sunriseminutes} ${sunriseperiod}`;
         sunset.textContent = `${sunsetHours}:${sunsetMinutes} ${sunsetPeriod}`;
-       
+
 
     } catch (error) {
         console.log(error.message);

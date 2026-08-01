@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather App</title>
     <link rel="stylesheet" href="/style.css">
 </head>
+
 <body>
     <div class="weather-container">
         <h1>Weather App</h1>
@@ -17,17 +19,27 @@
         </div>
 
         <div class="weather-card">
-            <div>
-                <span>Humidity</span>
-                <strong id="humidity">--%</strong>
+
+            <h2 id="cityName">Colombo</h2>
+
+            <p id="temperature">--°C</p>
+
+            <p id="description">Weather condition</p>
+            <div class="weather-details">
+                <div>
+                    <span>Humidity</span>
+                    <strong id="humidity">--%</strong>
+                </div>
+
+                <div>
+                    <span>Wind</span>
+                    <strong id="wind">-- Km/h</strong>
+                </div>
             </div>
 
-            <div>
-                <span>Wind</span>
-                <strong id="wind">-- Km/h</strong>
-            </div>
         </div>
     </div>
     <script src="app.js"></script>
 </body>
+
 </html>

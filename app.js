@@ -48,8 +48,55 @@ async function getWeather(city) {
         let latitude = data.coord.lat;
         let longitude = data.coord.lon;
 
-       let forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
-    
+        let forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
+
+        console.log("Forecast URL:", forecastUrl);
+
+        let forecastResponse = await fetch(forecastUrl);
+
+        console.log("Forecast Response:", forecastResponse);
+
+        if (!forecastResponse.ok) {
+            throw new Error("Forecast data could not be loaded");
+        }
+
+        let forecastData = await forecastResponse.json();
+
+        console.log("Forecast Data:", forecastData);
+
+        forecastContainer.innerHTML = "";
+
+            for (let i = 0; i < forecastData.list.length; i++) {
+           
+
+                if (forecastData.list[i].dt_txt.includes("12:00:00")) {
+
+                let forecast = forecastData.list[i];
+
+                let card = document.createElement("div");
+                card.classList.add("forecast-card");
+                let iconCode = forecast.weather[0].icon;
+                let iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+
+                let date = new Date(forecast.dt_txt);
+                let day = date.toLocaleDateString("en-US", {weekday: "long"});
+                console.log(day);
+                
+
+                card.innerHTML = `
+                    <h3>${day}</h3>
+                    <img src="${iconUrl}" alt="Weather icon">
+                    <h3>${forecast.main.temp}°C</h3>
+                    <p>${forecast.weather[0].description}</p>
+                `;
+                forecastContainer.appendChild(card);
+                console.log(card);
+                
+
+                }
+
+        }
+
         
         cityName.textContent = data.name;
         countryName.textContent = data.sys.country;

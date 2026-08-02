@@ -108,7 +108,9 @@ window.addEventListener("load", function () {
             }
             return response.json();
         }).then(function (data) {
-            console.log(data);
+            console.log(data.list[0].main);
+            console.log(data.list[0].weather);
+            console.log(data.list[0].dt_txt);
             
         }).catch(function (error) {
             console.log(error.message);

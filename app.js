@@ -12,6 +12,7 @@ const visibility = document.getElementById("visibility");
 const sunrise = document.getElementById("sunrise");
 const sunset = document.getElementById("sunset");
 const countryName = document.getElementById("countryName");
+let forecastContainer = document.getElementById("forecastContainer");
 
 let errorMessage = document.getElementById("errorMessage");
 
@@ -108,9 +109,36 @@ window.addEventListener("load", function () {
             }
             return response.json();
         }).then(function (data) {
-            console.log(data.list[0].main);
-            console.log(data.list[0].weather);
-            console.log(data.list[0].dt_txt);
+        for (let i = 0; i < data.list.length; i++) {
+           
+
+            if (data.list[i].dt_txt.includes("12:00:00")) {
+
+                let forecast = data.list[i];
+
+                let card = document.createElement("div");
+                card.classList.add("forecast-card");
+                let iconCode = forecast.weather[0].icon;
+                let iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+
+                let date = new Date(forecast.dt_txt);
+                let day = date.toLocaleDateString("en-US", {weekday: "long"});
+                console.log(day);
+                
+
+                card.innerHTML = `
+                    <h3>${day}</h3>
+                    <img src="${iconUrl}" alt="Weather icon">
+                    <h3>${forecast.main.temp}°C</h3>
+                    <p>${forecast.weather[0].description}</p>
+                `;
+                forecastContainer.appendChild(card);
+                console.log(card);
+                
+
+            }
+
+        }
             
         }).catch(function (error) {
             console.log(error.message);

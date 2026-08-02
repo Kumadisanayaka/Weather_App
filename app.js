@@ -11,6 +11,7 @@ const pressure = document.getElementById("pressure");
 const visibility = document.getElementById("visibility");
 const sunrise = document.getElementById("sunrise");
 const sunset = document.getElementById("sunset");
+const countryName = document.getElementById("countryName");
 
 let errorMessage = document.getElementById("errorMessage");
 
@@ -43,6 +44,7 @@ async function getWeather(city) {
         let data = await response.json();
 
         cityName.textContent = data.name;
+        countryName.textContent = data.sys.country;
         temperature.textContent = `${data.main.temp}°C`;
         description.textContent = data.weather[0].description;
         humidity.textContent = `${data.main.humidity}--%`;
@@ -97,6 +99,23 @@ window.addEventListener("load", function () {
         let latitude = position.coords.latitude;
         let longitude = position.coords.longitude;
 
+        let forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
+        // 5-Day Forecast API request
+
+        fetch(forecastUrl).then(function (response) {
+            if (!response.ok) {
+                throw new Error("something went wrong");
+            }
+            return response.json();
+        }).then(function (data) {
+            console.log(data);
+            
+        }).catch(function (error) {
+            console.log(error.message);
+            
+        });
+
+        // Current Weather API
         let url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
 
         fetch(url).then(function (response) {
@@ -107,6 +126,7 @@ window.addEventListener("load", function () {
             return response.json();
         }).then(function (data) {
             cityName.textContent = data.name;
+            countryName.textContent = data.sys.country;
             temperature.textContent = `${data.main.temp}°C`;
             description.textContent = data.weather[0].description;
             humidity.textContent = `${data.main.humidity}--%`;

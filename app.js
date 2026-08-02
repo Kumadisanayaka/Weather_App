@@ -44,6 +44,13 @@ async function getWeather(city) {
 
         let data = await response.json();
 
+        
+        let latitude = data.coord.lat;
+        let longitude = data.coord.lon;
+
+       let forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
+    
+        
         cityName.textContent = data.name;
         countryName.textContent = data.sys.country;
         temperature.textContent = `${data.main.temp}°C`;

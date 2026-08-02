@@ -90,4 +90,76 @@ async function getWeather(city) {
 
 }
 
+window.addEventListener("load", function () {
+
+    navigator.geolocation.getCurrentPosition(function (position) {
+
+        let latitude = position.coords.latitude;
+        let longitude = position.coords.longitude;
+
+        let url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
+
+        fetch(url).then(function (response) {
+            if (!response.ok) {
+                throw new Error("something went wrong");
+
+            }
+            return response.json();
+        }).then(function (data) {
+            cityName.textContent = data.name;
+            temperature.textContent = `${data.main.temp}°C`;
+            description.textContent = data.weather[0].description;
+            humidity.textContent = `${data.main.humidity}--%`;
+            wind.textContent = `${data.wind.speed}-- km/h`;
+
+            let iconCode = data.weather[0].icon;
+            let iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+
+            weatherIcon.src = iconUrl;
+
+            feelsLike.textContent = `${data.main.feels_like}°C`;
+            pressure.textContent = `${data.main.pressure} hPa`;
+            visibility.textContent = `${data.visibility / 1000}Km`;
+
+            let sunrisetime = new Date(data.sys.sunrise * 1000);
+            let sunrisehours = sunrisetime.getHours();
+            let sunriseminutes = sunrisetime.getMinutes();
+
+            sunriseminutes = String(sunriseminutes).padStart(2, "0");
+            sunrisehours = sunrisehours % 12 || 12;
+
+            let sunriseperiod = sunrisehours >= 12 ? "PM" : "AM";
+
+
+
+            let sunsettime = new Date(data.sys.sunset * 1000);
+            let sunsetHours = sunsettime.getHours();
+            let sunsetMinutes = sunsettime.getMinutes();
+
+            sunsetMinutes = String(sunsetMinutes).padStart(2, "0");
+
+            let sunsetPeriod = sunsetHours >= 12 ? "PM" : "AM";
+
+            sunsetHours = sunsetHours % 12 || 12;
+
+
+            sunrise.textContent = `${sunrisehours}:${sunriseminutes} ${sunriseperiod}`;
+            sunset.textContent = `${sunsetHours}:${sunsetMinutes} ${sunsetPeriod}`;
+
+        }).catch(function (error) {
+            console.log(error.message);
+
+        })
+
+
+    },
+        function (error) {
+            console.log("Location error : ", error.message);
+
+        }
+
+    );
+
+});
+
 getUser();

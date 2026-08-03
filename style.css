@@ -12,13 +12,11 @@
 
 body {
     font-family: Arial, sans-serif;
-
     background: linear-gradient(135deg,
             #74ebd5,
             #9face6);
 
     min-height: 100vh;
-
     padding: 40px 0;
 }
 
@@ -28,7 +26,6 @@ body {
 .weather-container {
     width: 90%;
     max-width: 700px;
-
     margin: 0 auto;
 }
 
@@ -38,7 +35,6 @@ body {
 .app-header {
     text-align: center;
     color: white;
-
     margin-bottom: 25px;
 }
 
@@ -57,28 +53,19 @@ body {
 
 .search-box {
     display: flex;
-
     gap: 10px;
-
     margin-bottom: 20px;
 }
 
 .search-box input {
     flex: 1;
-
     min-width: 0;
-
     padding: 14px 16px;
-
     border: none;
     border-radius: 10px;
-
     outline: none;
-
     font-size: 15px;
-
     background: rgba(255, 255, 255, 0.95);
-
     transition: 0.2s;
 }
 
@@ -88,24 +75,18 @@ body {
 
 #searchbtn {
     width: 110px;
-
     border: none;
     border-radius: 10px;
-
     background: #ff8c42;
     color: white;
-
     font-size: 15px;
     font-weight: bold;
-
     cursor: pointer;
-
     transition: 0.2s;
 }
 
 #searchbtn:hover {
     transform: translateY(-2px);
-
     background: #ff7624;
 }
 
@@ -115,15 +96,10 @@ body {
 #loadingMessage,
 #errorMessage {
     display: none;
-
     text-align: center;
-
     padding: 12px;
-
     margin-bottom: 15px;
-
     border-radius: 10px;
-
     font-weight: bold;
 }
 

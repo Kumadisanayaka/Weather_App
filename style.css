@@ -257,13 +257,11 @@ body {
 
 .sun-item span {
     font-size: 14px;
-
     color: #666;
 }
 
 .sun-item strong {
     font-size: 16px;
-
     color: #333;
 }
 
@@ -272,22 +270,16 @@ body {
 
 .forecast-section {
     background: rgba(255, 255, 255, 0.92);
-
     padding: 25px;
-
     border-radius: 20px;
-
     box-shadow:
         0 15px 35px rgba(0, 0, 0, 0.12);
 }
 
 .forecast-section h2 {
     text-align: center;
-
     font-size: 24px;
-
     color: #333;
-
     margin-bottom: 20px;
 }
 
@@ -358,7 +350,7 @@ body {
 }
 
 
-/* ==================== TABLET ==================== */
+/*------------------- TABLET ------------------*/
 
 @media (max-width: 650px) {
 
@@ -372,7 +364,7 @@ body {
 }
 
 
-/* ==================== MOBILE ==================== */
+/* --------------------- MOBILE --------------------*/
 
 @media (max-width: 500px) {
 
@@ -458,7 +450,7 @@ body {
 }
 
 
-/* ==================== SMALL MOBILE ==================== */
+/* ---------------- SMALL MOBILE ------------------*/
 
 @media (max-width: 350px) {
 

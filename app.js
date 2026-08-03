@@ -1,6 +1,13 @@
+
+// ===============================
+// DOM Elements
+// ===============================
+
 const cityInput = document.getElementById("cityInput");
 const searchbtn = document.getElementById("searchbtn");
+
 const cityName = document.getElementById("cityName");
+const countryName = document.getElementById("countryName");
 const temperature = document.getElementById("temperature");
 const description = document.getElementById("description");
 const humidity = document.getElementById("humidity");
@@ -11,259 +18,388 @@ const pressure = document.getElementById("pressure");
 const visibility = document.getElementById("visibility");
 const sunrise = document.getElementById("sunrise");
 const sunset = document.getElementById("sunset");
-const countryName = document.getElementById("countryName");
-let forecastContainer = document.getElementById("forecastContainer");
 
-let errorMessage = document.getElementById("errorMessage");
+const forecastContainer =
+    document.getElementById("forecastContainer");
+
+const errorMessage =
+    document.getElementById("errorMessage");
+
+
+// ===============================
+// API Key
+// ===============================
+
+let apiKey = "b4d3457f753e1147ff953187948d96dd";
+
+
+// ===============================
+// Search Button
+// ===============================
 
 searchbtn.addEventListener("click", function () {
+
     let city = cityInput.value.trim();
 
     if (city === "") {
+
         errorMessage.style.display = "block";
         errorMessage.textContent = "Please Enter a city name";
 
     } else {
+
         errorMessage.style.display = "none";
+
         getWeather(city);
     }
 
-})
+});
 
-let apiKey = "b4d3457f753e1147ff953187948d96dd";
+
+// ===============================
+// Get Weather by City
+// ===============================
 
 async function getWeather(city) {
-    let url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+    let url =
+        `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
     try {
-        let response = await fetch(url)
+
+        let response = await fetch(url);
 
         if (!response.ok) {
-            throw new Error("something went wrong");
-
+            throw new Error("City not found");
         }
 
         let data = await response.json();
 
-        
+
+        // ===============================
+        // Current Weather
+        // ===============================
+
+        displayWeather(data);
+
+
+        // ===============================
+        // Get Latitude & Longitude
+        // ===============================
+
         let latitude = data.coord.lat;
         let longitude = data.coord.lon;
 
-        let forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
 
-        console.log("Forecast URL:", forecastUrl);
+        // ===============================
+        // Get Forecast
+        // ===============================
 
-        let forecastResponse = await fetch(forecastUrl);
-
-        console.log("Forecast Response:", forecastResponse);
-
-        if (!forecastResponse.ok) {
-            throw new Error("Forecast data could not be loaded");
-        }
-
-        let forecastData = await forecastResponse.json();
-
-        console.log("Forecast Data:", forecastData);
-
-        forecastContainer.innerHTML = "";
-
-            for (let i = 0; i < forecastData.list.length; i++) {
-           
-
-                if (forecastData.list[i].dt_txt.includes("12:00:00")) {
-
-                let forecast = forecastData.list[i];
-
-                let card = document.createElement("div");
-                card.classList.add("forecast-card");
-                let iconCode = forecast.weather[0].icon;
-                let iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
-
-                let date = new Date(forecast.dt_txt);
-                let day = date.toLocaleDateString("en-US", {weekday: "long"});
-                console.log(day);
-                
-
-                card.innerHTML = `
-                    <h3>${day}</h3>
-                    <img src="${iconUrl}" alt="Weather icon">
-                    <h3>${forecast.main.temp}°C</h3>
-                    <p>${forecast.weather[0].description}</p>
-                `;
-                forecastContainer.appendChild(card);
-                console.log(card);
-                
-
-                }
-
-        }
-
-        
-        cityName.textContent = data.name;
-        countryName.textContent = data.sys.country;
-        temperature.textContent = `${data.main.temp}°C`;
-        description.textContent = data.weather[0].description;
-        humidity.textContent = `${data.main.humidity}--%`;
-        wind.textContent = `${data.wind.speed}-- km/h`;
-
-        let iconCode = data.weather[0].icon;
-        let iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
-
-        weatherIcon.src = iconUrl;
-
-        feelsLike.textContent = `${data.main.feels_like}°C`;
-        pressure.textContent = `${data.main.pressure} hPa`;
-        visibility.textContent = `${data.visibility / 1000}Km`;
-
-        let sunrisetime = new Date(data.sys.sunrise * 1000);
-        let sunrisehours = sunrisetime.getHours();
-        let sunriseminutes = sunrisetime.getMinutes();
-
-        sunriseminutes = String(sunriseminutes).padStart(2, "0");
-        sunrisehours = sunrisehours % 12 || 12;
-
-        let sunriseperiod = sunrisehours >= 12 ? "PM" : "AM";
-
-
-
-        let sunsettime = new Date(data.sys.sunset * 1000);
-        let sunsetHours = sunsettime.getHours();
-        let sunsetMinutes = sunsettime.getMinutes();
-
-        sunsetMinutes = String(sunsetMinutes).padStart(2, "0");
-
-        let sunsetPeriod = sunsetHours >= 12 ? "PM" : "AM";
-
-        sunsetHours = sunsetHours % 12 || 12;
-
-
-        sunrise.textContent = `${sunrisehours}:${sunriseminutes} ${sunriseperiod}`;
-        sunset.textContent = `${sunsetHours}:${sunsetMinutes} ${sunsetPeriod}`;
+        getForecast(latitude, longitude);
 
 
     } catch (error) {
+
+        console.log(error.message);
+
+        errorMessage.style.display = "block";
+        errorMessage.textContent = error.message;
+
+    }
+
+}
+
+
+// ===============================
+// Display Current Weather
+// ===============================
+
+function displayWeather(data) {
+
+    cityName.textContent = data.name;
+
+    countryName.textContent = data.sys.country;
+
+    temperature.textContent =
+        `${Math.round(data.main.temp)}°C`;
+
+    description.textContent =
+        data.weather[0].description;
+
+    humidity.textContent =
+        `${data.main.humidity}%`;
+
+    wind.textContent =
+        `${data.wind.speed} km/h`;
+
+
+    // Weather Icon
+
+    let iconCode = data.weather[0].icon;
+
+    let iconUrl =
+        `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+
+    weatherIcon.src = iconUrl;
+
+
+    // Extra Information
+
+    feelsLike.textContent =
+        `${Math.round(data.main.feels_like)}°C`;
+
+    pressure.textContent =
+        `${data.main.pressure} hPa`;
+
+    visibility.textContent =
+        `${data.visibility / 1000} Km`;
+
+
+    // ===============================
+    // Sunrise
+    // ===============================
+
+    let sunrisetime =
+        new Date(data.sys.sunrise * 1000);
+
+    let sunrisehours =
+        sunrisetime.getHours();
+
+    let sunriseminutes =
+        sunrisetime.getMinutes();
+
+    sunriseminutes =
+        String(sunriseminutes).padStart(2, "0");
+
+    let sunriseperiod =
+        sunrisehours >= 12 ? "PM" : "AM";
+
+    sunrisehours =
+        sunrisehours % 12 || 12;
+
+
+    sunrise.textContent =
+        `${sunrisehours}:${sunriseminutes} ${sunriseperiod}`;
+
+
+    // ===============================
+    // Sunset
+    // ===============================
+
+    let sunsettime =
+        new Date(data.sys.sunset * 1000);
+
+    let sunsetHours =
+        sunsettime.getHours();
+
+    let sunsetMinutes =
+        sunsettime.getMinutes();
+
+    sunsetMinutes =
+        String(sunsetMinutes).padStart(2, "0");
+
+    let sunsetPeriod =
+        sunsetHours >= 12 ? "PM" : "AM";
+
+    sunsetHours =
+        sunsetHours % 12 || 12;
+
+
+    sunset.textContent =
+        `${sunsetHours}:${sunsetMinutes} ${sunsetPeriod}`;
+}
+
+
+// ===============================
+// Get 5-Day Forecast
+// ===============================
+
+async function getForecast(latitude, longitude) {
+
+    let forecastUrl =
+        `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
+
+    try {
+
+        let response =
+            await fetch(forecastUrl);
+
+        if (!response.ok) {
+            throw new Error("Forecast data could not be loaded");
+        }
+
+        let data =
+            await response.json();
+
+
+        // Clear old forecast cards
+
+        forecastContainer.innerHTML = "";
+
+
+        // ===============================
+        // Loop Forecast Data
+        // ===============================
+
+        for (
+            let i = 0;
+            i < data.list.length;
+            i++
+        ) {
+
+            // Get one forecast for each day
+
+            if (
+                data.list[i].dt_txt.includes("12:00:00")
+            ) {
+
+                let forecast =
+                    data.list[i];
+
+
+                // ===============================
+                // Create Card
+                // ===============================
+
+                let card =
+                    document.createElement("div");
+
+                card.classList.add("forecast-card");
+
+
+                // Weather Icon
+
+                let iconCode =
+                    forecast.weather[0].icon;
+
+                let iconUrl =
+                    `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+
+
+                // Day
+
+                let date =
+                    new Date(forecast.dt_txt);
+
+                let day =
+                    date.toLocaleDateString(
+                        "en-US",
+                        {
+                            weekday: "long"
+                        }
+                    );
+
+
+                // ===============================
+                // Card HTML
+                // ===============================
+
+                card.innerHTML = `
+
+                    <h3>${day}</h3>
+
+                    <img
+                        src="${iconUrl}"
+                        alt="Weather icon"
+                    >
+
+                    <h4>
+                        ${Math.round(forecast.main.temp)}°C
+                    </h4>
+
+                    <p>
+                        ${forecast.weather[0].description}
+                    </p>
+
+                `;
+
+
+                // Add card to page
+
+                forecastContainer.appendChild(card);
+
+            }
+
+        }
+
+    } catch (error) {
+
         console.log(error.message);
 
     }
 
 }
 
+
+// ===============================
+// Load Current Location
+// ===============================
+
 window.addEventListener("load", function () {
 
-    navigator.geolocation.getCurrentPosition(function (position) {
+    navigator.geolocation.getCurrentPosition(
 
-        let latitude = position.coords.latitude;
-        let longitude = position.coords.longitude;
+        async function (position) {
 
-        let forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
-        // 5-Day Forecast API request
+            let latitude =
+                position.coords.latitude;
 
-        fetch(forecastUrl).then(function (response) {
-            if (!response.ok) {
-                throw new Error("something went wrong");
-            }
-            return response.json();
-        }).then(function (data) {
-        for (let i = 0; i < data.list.length; i++) {
-           
+            let longitude =
+                position.coords.longitude;
 
-            if (data.list[i].dt_txt.includes("12:00:00")) {
 
-                let forecast = data.list[i];
+            try {
 
-                let card = document.createElement("div");
-                card.classList.add("forecast-card");
-                let iconCode = forecast.weather[0].icon;
-                let iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+                // ===============================
+                // Current Weather by Location
+                // ===============================
 
-                let date = new Date(forecast.dt_txt);
-                let day = date.toLocaleDateString("en-US", {weekday: "long"});
-                console.log(day);
-                
+                let url =
+                    `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
 
-                card.innerHTML = `
-                    <h3>${day}</h3>
-                    <img src="${iconUrl}" alt="Weather icon">
-                    <h3>${forecast.main.temp}°C</h3>
-                    <p>${forecast.weather[0].description}</p>
-                `;
-                forecastContainer.appendChild(card);
-                console.log(card);
-                
+                let response =
+                    await fetch(url);
 
-            }
+                if (!response.ok) {
+                    throw new Error(
+                        "Location weather could not be loaded"
+                    );
+                }
 
-        }
-            
-        }).catch(function (error) {
-            console.log(error.message);
-            
-        });
+                let data =
+                    await response.json();
 
-        // Current Weather API
-        let url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
 
-        fetch(url).then(function (response) {
-            if (!response.ok) {
-                throw new Error("something went wrong");
+                // Display Current Weather
+
+                displayWeather(data);
+
+
+                // ===============================
+                // Display Forecast
+                // ===============================
+
+                getForecast(latitude, longitude);
+
+
+            } catch (error) {
+
+                console.log(error.message);
 
             }
-            return response.json();
-        }).then(function (data) {
-            cityName.textContent = data.name;
-            countryName.textContent = data.sys.country;
-            temperature.textContent = `${data.main.temp}°C`;
-            description.textContent = data.weather[0].description;
-            humidity.textContent = `${data.main.humidity}--%`;
-            wind.textContent = `${data.wind.speed}-- km/h`;
 
-            let iconCode = data.weather[0].icon;
-            let iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
-
-            weatherIcon.src = iconUrl;
-
-            feelsLike.textContent = `${data.main.feels_like}°C`;
-            pressure.textContent = `${data.main.pressure} hPa`;
-            visibility.textContent = `${data.visibility / 1000}Km`;
-
-            let sunrisetime = new Date(data.sys.sunrise * 1000);
-            let sunrisehours = sunrisetime.getHours();
-            let sunriseminutes = sunrisetime.getMinutes();
-
-            sunriseminutes = String(sunriseminutes).padStart(2, "0");
-            sunrisehours = sunrisehours % 12 || 12;
-
-            let sunriseperiod = sunrisehours >= 12 ? "PM" : "AM";
+        },
 
 
-
-            let sunsettime = new Date(data.sys.sunset * 1000);
-            let sunsetHours = sunsettime.getHours();
-            let sunsetMinutes = sunsettime.getMinutes();
-
-            sunsetMinutes = String(sunsetMinutes).padStart(2, "0");
-
-            let sunsetPeriod = sunsetHours >= 12 ? "PM" : "AM";
-
-            sunsetHours = sunsetHours % 12 || 12;
-
-
-            sunrise.textContent = `${sunrisehours}:${sunriseminutes} ${sunriseperiod}`;
-            sunset.textContent = `${sunsetHours}:${sunsetMinutes} ${sunsetPeriod}`;
-
-        }).catch(function (error) {
-            console.log(error.message);
-
-        })
-
-
-    },
         function (error) {
-            console.log("Location error : ", error.message);
+
+            console.log(
+                "Location error:",
+                error.message
+            );
 
         }
 
     );
 
 });
-
-getUser();
